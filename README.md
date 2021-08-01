@@ -1,4 +1,4 @@
-# Speedtest Exporter
+# Librespeed Exporter
 
 Simple **Librespeed exporter** for **Prometheus** written in **Python** using the
 official CLI from **Librespeed**
