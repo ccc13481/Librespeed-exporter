@@ -1,17 +1,17 @@
-FROM python:3.9.6-alpine3.13
+FROM python:3.9.6-alpine3.13 AS build-step
 
 WORKDIR /app
 
 COPY src/. .
 
 RUN adduser -D speedtest
-RUN pip install -r requirements.txt && \
-    export ARCHITECTURE=$(uname -m) && \
-    if [ "$ARCHITECTURE" == 'armv7l' ]; then export ARCHITECTURE=arm; fi && \
-    wget -O /tmp/speedtest.tgz "https://install.speedtest.net/app/cli/ookla-speedtest-1.0.0-${ARCHITECTURE}-linux.tgz" && \
-    tar zxvf /tmp/speedtest.tgz -C /tmp && \
-    cp /tmp/speedtest /usr/local/bin && \
-    rm requirements.txt
+RUN pip install -r requirements.txt
+RUN export ARCHITECTURE=$(uname -m)
+RUN if [ "$ARCHITECTURE" == 'armv7l' ]; then export ARCHITECTURE=arm; fi
+RUN wget -O /tmp/speedtest.tgz "https://github.com/librespeed/speedtest-cli/releases/download/v1.0.9/librespeed-cli_1.0.9_linux_amd64.tar.gz"
+RUN tar zxvf /tmp/speedtest.tgz -C /tmp
+RUN cp /tmp/librespeed-cli /usr/local/bin
+RUN rm requirements.txt
 
 RUN chown -R speedtest:speedtest /app
 
